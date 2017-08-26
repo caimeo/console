@@ -19,6 +19,8 @@ By default messages are sent to os.Stdout and os.Stderr.  If you desire to send 
 
 To connect to a logging system simply provide an io.writer that outputs to your logger.
 
+## Docs
+[![GoDoc](https://godoc.org/github.com/caimeo/console?status.svg)](https://godoc.org/github.com/caimeo/console)
 
 ## Usage Examples
 

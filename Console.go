@@ -1,3 +1,34 @@
+/*
+cameo/console
+
+A simple configurable output console
+
+Allows initialization with verbose and/or debug options.
+
+Use throughout your program code to output simple information to the console.
+
+Intro
+
+While developing and debuging it is often useful to output debug information to the console that would not normally be visible to the user. It is also often desired to include a verbose mode of operation for command line utilities. This utility library provides a simple way to acomplish this as well as output to Standard Out and Standard Error.
+
+Messages types:
+
+- Always: messages are always output to Standard Out
+
+- Error: messages are always sent to Standard Error
+
+- Debug: messages are only output to Standard Out if IsDebug() == true
+
+- Verbose: messages are only output to Standard Out if IsVerbose() == true or IsDebug() == true
+
+
+Redirect StdOut and StdErr
+
+By default messages are sent to os.Stdout and os.Stderr. If you desire to send messages to another location use RedirectIO(io.writer, io.writer)
+
+To connect to a logging system simply provide an io.writer that outputs to your logger.
+
+*/
 package console
 
 import (
