@@ -32,9 +32,11 @@ To connect to a logging system simply provide an io.writer that outputs to your 
 package console
 
 import (
+	"encoding/hex"
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 type Console interface {
@@ -139,6 +141,7 @@ func StdOut(args ...interface{}) {
 	if stdWriter == nil {
 		initWriters()
 	}
+	args = byteSlicesToHex(args...)
 	fmt.Fprintln(stdWriter, args...)
 }
 
@@ -147,6 +150,7 @@ func StdErr(args ...interface{}) {
 	if errWriter == nil {
 		initWriters()
 	}
+	args = byteSlicesToHex(args...)
 	fmt.Fprintln(errWriter, args...)
 }
 
@@ -177,6 +181,21 @@ func initWriters() {
 		errWriter = os.Stderr
 	}
 
+}
+
+//utiltity to convert all byte slices to hex strings
+//because displaying raw byte values is not real useful
+func byteSlicesToHex(args ...interface{}) (ret []interface{}) {
+	for _, v := range args {
+		switch i := v.(type) {
+		case []byte:
+			ret = append(ret, "0x"+strings.ToUpper(hex.EncodeToString(i)))
+		default:
+			ret = append(ret, v)
+
+		}
+	}
+	return ret
 }
 
 func newConsole(verbose bool, debug bool) console {
