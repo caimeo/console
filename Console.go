@@ -57,7 +57,7 @@ func (t *console) Always(args ...interface{}) {
 	if t == nil {
 		return
 	}
-	StdOut(args)
+	StdOut(args...)
 }
 
 //writes to stdout if IsVerbose == true or IsDebug == true
@@ -106,22 +106,22 @@ func (t *console) IsDebug() bool {
 
 //always writes to stdout
 func Always(args ...interface{}) {
-	con.Always(args)
+	con.Always(args...)
 }
 
 //writes to stdout if IsVerbose == true or IsDebug == true
 func Verbose(args ...interface{}) {
-	con.Verbose(args)
+	con.Verbose(args...)
 }
 
 //writes to stdout if IsDebug == ture
 func Debug(args ...interface{}) {
-	con.Debug(args)
+	con.Debug(args...)
 }
 
 //always writes to stderr
 func Error(args ...interface{}) {
-	con.Error(args)
+	con.Error(args...)
 }
 
 //returns true if verbose mode is turned on
@@ -139,11 +139,7 @@ func StdOut(args ...interface{}) {
 	if stdWriter == nil {
 		initWriters()
 	}
-	var collect string
-	for _, v := range args {
-		collect = collect + fmt.Sprint(v)
-	}
-	fmt.Fprintf(stdWriter, "%s\n", collect)
+	fmt.Fprintln(stdWriter, args...)
 }
 
 //Outputs to standard error as a single line
@@ -151,11 +147,7 @@ func StdErr(args ...interface{}) {
 	if errWriter == nil {
 		initWriters()
 	}
-	var collect string
-	for _, v := range args {
-		collect = collect + fmt.Sprint(v)
-	}
-	fmt.Fprintf(errWriter, "%s\n", collect)
+	fmt.Fprintln(errWriter, args...)
 }
 
 func argsToString(args ...interface{}) (collect string) {
