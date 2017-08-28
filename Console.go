@@ -32,11 +32,10 @@ To connect to a logging system simply provide an io.writer that outputs to your 
 package console
 
 import (
-	"encoding/hex"
 	"fmt"
 	"io"
 	"os"
-	"strings"
+	"reflect"
 )
 
 type Console interface {
@@ -141,7 +140,7 @@ func StdOut(args ...interface{}) {
 	if stdWriter == nil {
 		initWriters()
 	}
-	args = byteSlicesToHex(args...)
+	args = bytesToHex(args...)
 	fmt.Fprintln(stdWriter, args...)
 }
 
@@ -150,7 +149,7 @@ func StdErr(args ...interface{}) {
 	if errWriter == nil {
 		initWriters()
 	}
-	args = byteSlicesToHex(args...)
+	args = bytesToHex(args...)
 	fmt.Fprintln(errWriter, args...)
 }
 
@@ -185,14 +184,20 @@ func initWriters() {
 
 //utiltity to convert all byte slices to hex strings
 //because displaying raw byte values is not real useful
-func byteSlicesToHex(args ...interface{}) (ret []interface{}) {
+func bytesToHex(args ...interface{}) (ret []interface{}) {
 	for _, v := range args {
-		switch i := v.(type) {
-		case []byte:
-			ret = append(ret, "0x"+strings.ToUpper(hex.EncodeToString(i)))
-		default:
-			ret = append(ret, v)
 
+		if reflect.TypeOf(v).Kind() == reflect.Array && reflect.TypeOf(v).Elem().Kind() == reflect.Uint8 {
+			//if it's an array or bytes (uint8) then we output in hex
+			ret = append(ret, fmt.Sprintf("0x%X", v))
+		} else {
+			switch i := v.(type) {
+			case []byte, byte:
+				//slice of bytes output in hex
+				ret = append(ret, fmt.Sprintf("0x%X", i))
+			default:
+				ret = append(ret, v)
+			}
 		}
 	}
 	return ret
